@@ -11,77 +11,63 @@
 
         :root { --gold: #ffd700; --deep-gold: #b8860b; --bg-dark: #070502; }
 
-        /* INTRO SCREEN STYLES */
+        /* INTRO SCREEN */
         #intro-screen {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: #000; z-index: 20000; display: flex;
+            background: #000; z-index: 99999; display: flex;
             flex-direction: column; justify-content: center; align-items: center;
         }
-        .fire-dancers { display: flex; gap: 100px; margin-bottom: 30px; }
-        .fire-dancers img { width: 150px; height: auto; }
-        #enter-btn { background: none; border: none; cursor: pointer; color: var(--gold); font-family: 'Abhaya Libre'; }
-        #enter-btn img { width: 120px; transition: 0.3s; }
-        #enter-btn:hover img { transform: scale(1.1); }
+        .fire-dancers { display: flex; gap: 50px; margin-bottom: 20px; }
+        .fire-dancers img { width: 150px; height: 150px; object-fit: contain; }
+        #enter-btn { 
+            background: none; border: 2px solid var(--gold); padding: 15px 30px;
+            color: var(--gold); cursor: pointer; border-radius: 50px;
+            font-family: 'Abhaya Libre'; font-size: 1.5rem; transition: 0.3s;
+        }
+        #enter-btn:hover { background: var(--gold); color: #000; }
 
-        body, html { margin: 0; padding: 0; background-color: var(--bg-dark); color: #ffffff; font-family: 'Noto Sans Sinhala', sans-serif; overflow-x: hidden; scroll-behavior: smooth; }
-        .bg-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.06) 0%, transparent 75%); z-index: 1; pointer-events: none; }
-        #lanternBox { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 2; pointer-events: none; overflow: hidden; }
-        
-        /* ඉතුරු CSS කොටස් කලින් තිබූ පරිදිමයි (මම කෙටි කළා) */
-        .real-vesak-kudu { position: absolute; bottom: -100px; opacity: 0; display: flex; flex-direction: column; align-items: center; animation: jsFloatUp 14s linear infinite; }
-        #mainHomepage { max-width: 1050px; margin: 0 auto; padding: 40px 20px; text-align: center; z-index: 10; position: relative; }
-        .dharma-chakra { font-size: 4.5rem; color: var(--gold); animation: rotateChakra 25s linear infinite; }
-        @keyframes rotateChakra { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes jsFloatUp { 0% { transform: translateY(0) rotate(0deg) scale(0.5); opacity: 0; } 100% { transform: translateY(-135vh) rotate(25deg) scale(1.1); opacity: 0; } }
+        body, html { margin: 0; padding: 0; background-color: var(--bg-dark); color: #ffffff; font-family: 'Noto Sans Sinhala', sans-serif; overflow-x: hidden; }
+        #mainHomepage { display: block; padding: 40px 20px; text-align: center; }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <!-- ඔයා ඉල්ලපු Intro Screen එක -->
     <div id="intro-screen">
         <div class="fire-dancers">
-            <img src="fire-left.gif" alt="Dancer">
-            <img src="fire-right.gif" alt="Dancer">
+            <img src="fire-left.gif" alt="Fire" onerror="this.style.display='none'">
+            <img src="fire-right.gif" alt="Fire" onerror="this.style.display='none'">
         </div>
         <button id="enter-btn">
-            <img src="lotus-fingerprint.png" alt="Touch to Enter">
-            <p>ස්පර්ශ කර ඇතුළු වන්න</p>
+            පිවිසෙන්න
         </button>
     </div>
 
-    <div class="bg-overlay"></div>
-    <div id="lanternBox"></div>
-
     <div id="mainHomepage">
-        <!-- ඔයාගේ මුල් වෙබ් අඩවියේ කන්ටෙන්ට් එක මෙතනට දාන්න -->
-        <h1>ශාක්‍යසිංහ මංගල්‍යය</h1>
-        <!-- ඉතුරු ටික කලින් තිබූ විදිහටම -->
-    </div>
+        <h1>ශාක්‍යසිංහ මංගල්‍යය - 2570</h1>
+        <p>ආයුබෝවන්! මෙය ගොකරැල්ල මධ්‍ය මහා විද්‍යාලයේ වෙසක් වැඩසටහනයි.</p>
+        </div>
 
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        // Intro Screen Logic
-        window.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', () => {
             const introScreen = document.getElementById('intro-screen');
             const enterBtn = document.getElementById('enter-btn');
 
-            if (sessionStorage.getItem('hasVisited')) {
-                introScreen.style.display = 'none';
-            } else {
-                enterBtn.addEventListener('click', () => {
-                    introScreen.style.transition = 'opacity 1s';
-                    introScreen.style.opacity = '0';
-                    setTimeout(() => {
-                        introScreen.style.display = 'none';
-                        sessionStorage.setItem('hasVisited', 'true');
-                    }, 1000);
-                });
+            // කලින් ඇවිත් නම් කෙලින්ම සයිට් එක පෙන්වන්න
+            if (sessionStorage.getItem('visited')) {
+                introScreen.classList.add('hidden');
             }
-        });
 
-        // ඉතුරු functions ටික කලින් තිබූ විදිහටම මෙතනට දාන්න
-        AOS.init({ duration: 800, once: true });
-        // (ඔයාගේ කලින් තිබූ createVesakKudu, navigateToDetails, ආදී සියලුම functions මෙතනට)
+            // බටන් එක එබුවම
+            enterBtn.addEventListener('click', () => {
+                introScreen.style.opacity = '0';
+                introScreen.style.transition = 'opacity 0.5s';
+                setTimeout(() => {
+                    introScreen.classList.add('hidden');
+                    sessionStorage.setItem('visited', 'true');
+                }, 500);
+            });
+        });
     </script>
 </body>
 </html>
